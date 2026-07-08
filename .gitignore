@@ -1,3 +1,7 @@
-music
-output
+# Audio: no se versiona (pesado + licencias variadas)
+music/
+output/
+
+# macOS
+.DS_Store
 README.md
