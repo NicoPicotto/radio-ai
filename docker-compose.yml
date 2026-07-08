@@ -30,3 +30,4 @@ services:
       volumes:
          - ./liquidsoap/radio.liq:/etc/liquidsoap/radio.liq:ro
          - ./music:/music:ro
+         - ./output:/output:ro

@@ -1,34 +1,40 @@
-# ── Radio IA · Hito 1 · radio.liq ─────────────────────────────────
-# Solo música: reproduce la carpeta /music en loop y la transmite
-# a Icecast en MP3 128 kbps. Todavía sin IA.
-# Sintaxis de Liquidsoap 2.x.
+# ── Radio IA · Hito 2 · radio.liq ─────────────────────────────────
+# Música + locución pregrabada, alternando una y una, con crossfade.
+# Sintaxis de Liquidsoap 2.3.x.
 # ──────────────────────────────────────────────────────────────────
-
-# Logs a stdout para verlos con:  docker compose logs -f liquidsoap
 settings.log.stdout.set(true)
 settings.log.level.set(3)
 
-# Fuente de música: toma todos los tracks de /music, los mezcla al
-# azar y vigila la carpeta para recargar si agregás/sacás archivos.
+# Música: igual que en el Hito 1.
 music = playlist(
   mode="randomize",
   reload_mode="watch",
   "/music"
 )
 
-# Garantiza que la transmisión nunca se corte: si por algún motivo
-# no hay audio disponible, emite silencio en lugar de morir.
-radio = mksafe(music)
+# Locución de prueba: un único clip fijo que se repite.
+# Más adelante esto lo va a reemplazar la voz generada por IA.
+speech = single("/output/locucion_test.mp3")
 
-# Salida a Icecast, codificando en MP3.
+# Alternar: una canción, una locución, una canción, una locución...
+# weights=[1,1] = un track de cada fuente por turno.
+# El orden [music, speech] hace que arranque con una canción.
+radio = rotate(weights=[1, 1], [music, speech])
+
+# Transición suave para que no haya cortes secos entre track y track.
+radio = crossfade(duration=2., radio)
+
+# Red de seguridad: si algo falla, silencio en vez de morir.
+radio = mksafe(radio)
+
 output.icecast(
   %mp3(bitrate=128),
-  host="icecast",              # nombre del servicio en docker-compose
+  host="icecast",
   port=8000,
-  password="fierros_source",   # debe coincidir con ICECAST_SOURCE_PASSWORD
+  password="fierros_source",
   mount="radio.mp3",
   name="Radio IA",
-  description="Radio autónoma con locutores IA — Hito 1",
+  description="Radio autónoma con locutores IA — Hito 2",
   genre="Varied",
   radio
 )
