@@ -1,0 +1,32 @@
+# ── Radio IA · Hito 1 ─────────────────────────────────────────────
+# Levanta dos servicios: Icecast (servidor de streaming) y
+# Liquidsoap (motor que pasa la música). Todo local, sin VPS.
+#
+# Correr con:  docker compose up
+# Escuchar en: http://localhost:8000/radio.mp3
+# ──────────────────────────────────────────────────────────────────
+
+services:
+   icecast:
+      image: libretime/icecast:2.4.4
+      container_name: radio-icecast
+      restart: unless-stopped
+      ports:
+         - "8000:8000"
+      environment:
+         # La source-password TIENE que coincidir con la de radio.liq
+         - ICECAST_SOURCE_PASSWORD=fierros_source
+         - ICECAST_ADMIN_PASSWORD=fierros_admin
+         - ICECAST_RELAY_PASSWORD=fierros_relay
+         - ICECAST_HOSTNAME=localhost
+
+   liquidsoap:
+      image: savonet/liquidsoap:v2.3.2
+      container_name: radio-liquidsoap
+      restart: unless-stopped
+      depends_on:
+         - icecast
+      command: /etc/liquidsoap/radio.liq
+      volumes:
+         - ./liquidsoap/radio.liq:/etc/liquidsoap/radio.liq:ro
+         - ./music:/music:ro
