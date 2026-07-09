@@ -14,7 +14,7 @@ music = playlist(
 
 # Locución de prueba: un único clip fijo que se repite.
 # Más adelante esto lo va a reemplazar la voz generada por IA.
-speech = single("/output/locucion_test.mp3")
+speech = amplify(4.0, single("/output/locucion_test.mp3"))
 
 # Alternar: una canción, una locución, una canción, una locución...
 # weights=[1,1] = un track de cada fuente por turno.
@@ -23,6 +23,11 @@ radio = rotate(weights=[1, 1], [music, speech])
 
 # Transición suave para que no haya cortes secos entre track y track.
 radio = crossfade(duration=2., radio)
+
+# Limitador de seguridad: techo a -1 dB. Deja subir el volumen sin que distorsione.
+radio = limit(threshold=-1.0, radio)
+
+radio = mksafe(radio)
 
 # Red de seguridad: si algo falla, silencio en vez de morir.
 radio = mksafe(radio)

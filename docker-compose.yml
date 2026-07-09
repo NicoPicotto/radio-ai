@@ -31,3 +31,10 @@ services:
          - ./liquidsoap/radio.liq:/etc/liquidsoap/radio.liq:ro
          - ./music:/music:ro
          - ./output:/output:ro
+
+   kokoro:
+      image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
+      container_name: radio-kokoro
+      restart: unless-stopped
+      ports:
+         - "8880:8880"
