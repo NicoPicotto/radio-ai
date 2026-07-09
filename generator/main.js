@@ -1,21 +1,25 @@
 // generator/main.js
-// Dora (LLM) escribe el guion a partir de la hora y el clima reales,
-// y Kokoro lo convierte en voz. La personalidad vive en DORA_PROMPT.
+// Corre en loop: cada pocos minutos, Dora escribe una locución nueva
+// (hora + clima reales) y Kokoro la convierte en voz. Liquidsoap la
+// levanta sola. La personalidad vive en DORA_PROMPT.
 
-const { writeFile } = require("node:fs/promises");
+const { writeFile, rename } = require("node:fs/promises");
 const path = require("node:path");
 
 // --- Configuración -------------------------------------------------
 const KOKORO_URL = "http://localhost:8880/v1/audio/speech";
-const OUTPUT_PATH = path.join(__dirname, "..", "output", "locucion_test.mp3");
+const OUT_DIR = path.join(__dirname, "..", "output");
+const OUTPUT_PATH = path.join(OUT_DIR, "locucion.mp3");
+const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.mp3");
 const GEMINI_MODEL = "gemini-2.5-flash";
+const INTERVALO_MS = 3 * 60 * 1000; // regenera cada 3 minutos
 
 const CIUDAD = "General Deheza";
 const LAT = -32.7558;
 const LON = -63.7822;
 const TZ = "America/Argentina/Cordoba";
 
-// --- La personalidad de Dora (acá se ajusta todo el personaje) ------
+// --- La personalidad de Dora (acá se ajusta el personaje) ----------
 const DORA_PROMPT = `
 Sos Dora, la locutora de una pequeña radio de ${CIUDAD}, un pueblo de la provincia de Córdoba, Argentina.
 
@@ -27,8 +31,9 @@ Reglas que NUNCA rompés:
 - Escribís entre 3 y 4 frases. Verborrágica, pero no infinita.
 - Hablás en español rioplatense, con voseo, natural y de pueblo. Nada de lunfardo tan cerrado que no se entienda.
 - SIEMPRE mencionás la hora y el clima que te doy. Podés opinar todo lo que quieras, pero los datos son sagrados: no inventás temperaturas, ni lugares, ni gente, ni noticias.
+- La hora que te paso puede tener unos minutos de atraso para cuando salga al aire, así que decila SIEMPRE aproximada ("cerca de las cuatro", "las tres y media pasadas"), nunca exacta al minuto.
 - Sos una señora de verdad. No sabés que sos una inteligencia artificial y JAMÁS lo mencionás ni rompés el personaje.
-- Escribís TEXTO PLANO para leer en voz alta: sin asteriscos, sin Markdown, sin emojis, sin acotaciones entre paréntesis como "(risas)". Los números y la hora, escritos como se dicen ("nueve grados", "las cuatro menos veinte"), no como cifras.
+- Escribís TEXTO PLANO para leer en voz alta: sin asteriscos, sin Markdown, sin emojis, sin acotaciones entre paréntesis. Los números escritos como se dicen ("nueve grados"), no como cifras.
 - Variás cada vez: no arranques siempre igual ni repitas las mismas frases.
 
 Devolvés SOLO lo que Dora dice al aire, nada más.
@@ -132,7 +137,6 @@ async function getGuion(hora, clima) {
       .map((p) => p.text)
       .filter(Boolean)
       .join(" ");
-   // Red de seguridad: sacar cualquier símbolo de Markdown que se cuele
    const limpio = raw
       .replace(/[*_#\`]/g, "")
       .replace(/\s+/g, " ")
@@ -148,20 +152,18 @@ async function armarTexto() {
    try {
       clima = await getClima();
    } catch (e) {
-      console.warn("Clima no disponible:", e.message);
+      console.warn("  Clima no disponible:", e.message);
    }
-
    try {
       return await getGuion(hora, clima);
    } catch (e) {
-      // Si Gemini falla, la radio no queda muda: plantilla simple.
-      console.warn("Gemini no disponible, uso plantilla:", e.message);
+      console.warn("  Gemini no disponible, uso plantilla:", e.message);
       const climaTxt = clima ? `, ${clima.temp} grados y ${clima.desc}` : "";
       return `${hora}${climaTxt}. Volvemos con más música.`;
    }
 }
 
-// --- Voz (Kokoro) --------------------------------------------------
+// --- Voz (Kokoro), con escritura atómica ---------------------------
 async function generarVoz(texto) {
    const res = await fetch(KOKORO_URL, {
       method: "POST",
@@ -177,19 +179,35 @@ async function generarVoz(texto) {
    if (!res.ok)
       throw new Error(`Kokoro respondió ${res.status}: ${await res.text()}`);
    const audio = Buffer.from(await res.arrayBuffer());
-   await writeFile(OUTPUT_PATH, audio);
+   // Escribimos a un temporal y renombramos: así Liquidsoap nunca
+   // lee un archivo a medio escribir (el rename es atómico).
+   await writeFile(TMP_PATH, audio);
+   await rename(TMP_PATH, OUTPUT_PATH);
    return audio.length;
 }
 
-// --- Orquestación --------------------------------------------------
-async function main() {
+// --- Una vuelta completa -------------------------------------------
+async function generarUna() {
    const texto = await armarTexto();
-   console.log("Dora dice:", texto);
+   console.log(new Date().toLocaleTimeString("es-AR"), "Dora dice:", texto);
    const bytes = await generarVoz(texto);
-   console.log(`OK: ${bytes} bytes -> output/locucion_test.mp3`);
+   console.log(`  OK: ${bytes} bytes -> output/locucion.mp3`);
 }
 
-main().catch((e) => {
-   console.error("Falló la generación:", e.message);
-   process.exit(1);
-});
+// --- Loop infinito: regenera cada INTERVALO_MS ---------------------
+async function main() {
+   console.log(
+      `Generador de Dora en marcha. Regenera cada ${INTERVALO_MS / 60000} min.`,
+   );
+   while (true) {
+      try {
+         await generarUna();
+      } catch (e) {
+         // Una falla no mata el loop: queda la locución anterior sonando.
+         console.error("  Falló esta vuelta (sigo igual):", e.message);
+      }
+      await new Promise((r) => setTimeout(r, INTERVALO_MS));
+   }
+}
+
+main();

@@ -13,7 +13,13 @@ music = playlist(
 )
 
 # La voz va etiquetada con type="voz" para reconocerla en la transición.
-speech = amplify(4.0, single('annotate:type="voz":/output/locucion_test.mp3'))
+# La locución se levanta dinámicamente: cada vez re-lee el archivo
+# actual, así toma la última que generó el script, sin reiniciar.
+def pedir_locucion() =
+  [request.create('annotate:type="voz":/output/locucion.mp3')]
+end
+speech = request.dynamic.list(pedir_locucion)
+speech = amplify(4.0, speech)
 
 # Una canción, una locución, una canción...
 radio = rotate(weights=[1, 1], [music, speech])
@@ -24,9 +30,14 @@ radio = rotate(weights=[1, 1], [music, speech])
 #   para no comerle el saludo del principio ni el remate del final.
 def transicion(old, new) =
   if old.metadata["type"] == "voz" or new.metadata["type"] == "voz" then
+    # Entra o sale la voz: corte limpio, sin fundido.
     sequence([old.source, new.source])
   else
-    cross.simple(old, new)
+    # Entre dos temas: crossfade manual (bajo uno, subo el otro, los mezclo).
+    add(normalize=false, [
+      fade.out(duration=2., old.source),
+      fade.in(duration=2., new.source)
+    ])
   end
 end
 radio = cross(duration=2., transicion, radio)
