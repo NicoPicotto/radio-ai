@@ -13,6 +13,8 @@ const OUTPUT_PATH = path.join(OUT_DIR, "locucion.mp3");
 const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.mp3");
 const GEMINI_MODEL = "gemini-2.5-flash";
 const INTERVALO_MS = 3 * 60 * 1000; // regenera cada 3 minutos
+const NEWS_FEED_URL =
+   "https://news.google.com/rss/search?q=Cordoba+Argentina&hl=es-419&gl=AR&ceid=AR:es-419";
 
 const CIUDAD = "General Deheza";
 const LAT = -32.7558;
@@ -35,6 +37,8 @@ Reglas que NUNCA rompés:
 - Sos una señora de verdad. No sabés que sos una inteligencia artificial y JAMÁS lo mencionás ni rompés el personaje.
 - Escribís TEXTO PLANO para leer en voz alta: sin asteriscos, sin Markdown, sin emojis, sin acotaciones entre paréntesis. Los números escritos como se dicen ("nueve grados"), no como cifras.
 - Variás cada vez: no arranques siempre igual ni repitas las mismas frases.
+- A veces te paso un titular de noticia real para comentar. Cuando lo tengas, opinás sobre ese titular con tu estilo (te indignás, chusmeás, te sorprendés), pero SIEMPRE ateniéndote a lo que dice: no agregás datos ni detalles que no estén en el titular. Cuando no te paso noticia, hablás solo de la hora y el clima.
+- Si el titular es sobre una tragedia, un accidente o algo doloroso, NO hacés chistes ni lo trivializás: lo comentás con respeto y sensibilidad, aunque sigas siendo vos.
 
 Devolvés SOLO lo que Dora dice al aire, nada más.
 `;
@@ -101,7 +105,7 @@ function getHoraTexto() {
 }
 
 // --- Guion (Gemini escribe como Dora) ------------------------------
-async function getGuion(hora, clima) {
+async function getGuion(hora, clima, noticia) {
    const KEY = process.env.GEMINI_API_KEY;
    if (!KEY) throw new Error("Falta GEMINI_API_KEY (¿creaste el .env?)");
 
@@ -111,9 +115,10 @@ async function getGuion(hora, clima) {
          ? `- Temperatura: ${clima.temp} grados`
          : "- Temperatura: (no disponible)",
       clima ? `- Clima: ${clima.desc}` : "- Clima: (no disponible)",
-   ].join("\n");
+   ];
+   if (noticia) datos.push(`- Titular de noticia para comentar: "${noticia}"`);
 
-   const userMsg = `Datos de este momento en ${CIUDAD}:\n${datos}\n\nEscribí lo que diría Dora al aire ahora mismo.`;
+   const userMsg = `Datos de este momento en ${CIUDAD}:\n${datos.join("\n")}\n\nEscribí lo que diría Dora al aire ahora mismo.`;
 
    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
    const res = await fetch(url, {
@@ -154,8 +159,20 @@ async function armarTexto() {
    } catch (e) {
       console.warn("  Clima no disponible:", e.message);
    }
+
+   // La mitad de las veces Dora comenta una noticia; la otra mitad, solo hora y clima.
+   let noticia = null;
+   if (Math.random() < 0.5) {
+      try {
+         const titulares = await getNoticias();
+         noticia = titulares[Math.floor(Math.random() * titulares.length)];
+      } catch (e) {
+         console.warn("  Noticias no disponibles:", e.message);
+      }
+   }
+
    try {
-      return await getGuion(hora, clima);
+      return await getGuion(hora, clima, noticia);
    } catch (e) {
       console.warn("  Gemini no disponible, uso plantilla:", e.message);
       const climaTxt = clima ? `, ${clima.temp} grados y ${clima.desc}` : "";
@@ -208,6 +225,38 @@ async function main() {
       }
       await new Promise((r) => setTimeout(r, INTERVALO_MS));
    }
+}
+
+// Decodifica las entidades HTML más comunes de los titulares.
+function decodeEntities(s) {
+   return s
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+}
+
+// Trae unos titulares del feed RSS. Sin librerías: extrae los <title> a mano.
+async function getNoticias() {
+   const res = await fetch(NEWS_FEED_URL);
+   if (!res.ok) throw new Error(`RSS respondió ${res.status}`);
+   const xml = await res.text();
+   const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
+   const titulares = items
+      .slice(0, 6)
+      .map((it) => {
+         const m = it.match(/<title>([\s\S]*?)<\/title>/);
+         let t = m ? m[1] : "";
+         t = t.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, ""); // por si viene en CDATA
+         t = decodeEntities(t)
+            .replace(/\s+-\s+[^-]+$/, "")
+            .trim(); // saco el " - Fuente" del final
+         return t;
+      })
+      .filter(Boolean);
+   if (titulares.length === 0) throw new Error("Sin titulares en el feed");
+   return titulares;
 }
 
 main();
