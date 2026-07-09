@@ -1,35 +1,40 @@
-# ── Radio IA · Hito 2 · radio.liq ─────────────────────────────────
-# Música + locución pregrabada, alternando una y una, con crossfade.
-# Sintaxis de Liquidsoap 2.3.x.
+# ── Radio IA · radio.liq ──────────────────────────────────────────
+# Música + locución de Dora, con transición inteligente:
+# crossfade entre temas; corte limpio al entrar o salir la voz.
+# Liquidsoap 2.3.x
 # ──────────────────────────────────────────────────────────────────
 settings.log.stdout.set(true)
 settings.log.level.set(3)
 
-# Música: igual que en el Hito 1.
 music = playlist(
   mode="randomize",
   reload_mode="watch",
   "/music"
 )
 
-# Locución de prueba: un único clip fijo que se repite.
-# Más adelante esto lo va a reemplazar la voz generada por IA.
-speech = amplify(4.0, single("/output/locucion_test.mp3"))
+# La voz va etiquetada con type="voz" para reconocerla en la transición.
+speech = amplify(4.0, single('annotate:type="voz":/output/locucion_test.mp3'))
 
-# Alternar: una canción, una locución, una canción, una locución...
-# weights=[1,1] = un track de cada fuente por turno.
-# El orden [music, speech] hace que arranque con una canción.
+# Una canción, una locución, una canción...
 radio = rotate(weights=[1, 1], [music, speech])
 
-# Transición suave para que no haya cortes secos entre track y track.
-radio = crossfade(duration=2., radio)
+# Transición a medida:
+# - entre dos temas de música: crossfade normal.
+# - si entra o sale la voz: corte limpio (sequence), sin fundido,
+#   para no comerle el saludo del principio ni el remate del final.
+def transicion(old, new) =
+  if old.metadata["type"] == "voz" or new.metadata["type"] == "voz" then
+    sequence([old.source, new.source])
+  else
+    cross.simple(old, new)
+  end
+end
+radio = cross(duration=2., transicion, radio)
 
-# Limitador de seguridad: techo a -1 dB. Deja subir el volumen sin que distorsione.
+# Limitador de seguridad (techo a -1 dB).
 radio = limit(threshold=-1.0, radio)
 
-radio = mksafe(radio)
-
-# Red de seguridad: si algo falla, silencio en vez de morir.
+# Red de seguridad: silencio si algo falla.
 radio = mksafe(radio)
 
 output.icecast(
@@ -39,7 +44,7 @@ output.icecast(
   password="fierros_source",
   mount="radio.mp3",
   name="Radio IA",
-  description="Radio autónoma con locutores IA — Hito 2",
+  description="Radio autónoma con locutores IA",
   genre="Varied",
   radio
 )

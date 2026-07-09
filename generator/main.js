@@ -1,7 +1,6 @@
 // generator/main.js
-// Arma una locución con la HORA y el CLIMA reales, la manda a Kokoro
-// y guarda el audio donde Liquidsoap lo levanta.
-// Todavía sin LLM: el texto sale de una plantilla fija (eso viene en el Hito 4).
+// Dora (LLM) escribe el guion a partir de la hora y el clima reales,
+// y Kokoro lo convierte en voz. La personalidad vive en DORA_PROMPT.
 
 const { writeFile } = require("node:fs/promises");
 const path = require("node:path");
@@ -9,16 +8,33 @@ const path = require("node:path");
 // --- Configuración -------------------------------------------------
 const KOKORO_URL = "http://localhost:8880/v1/audio/speech";
 const OUTPUT_PATH = path.join(__dirname, "..", "output", "locucion_test.mp3");
+const GEMINI_MODEL = "gemini-2.5-flash";
 
-// Ubicación que reporta la radio. Cambiá estas líneas por tu ciudad.
-// (Estas son las de Córdoba capital.)
 const CIUDAD = "General Deheza";
 const LAT = -32.7558;
 const LON = -63.7822;
 const TZ = "America/Argentina/Cordoba";
 
+// --- La personalidad de Dora (acá se ajusta todo el personaje) ------
+const DORA_PROMPT = `
+Sos Dora, la locutora de una pequeña radio de ${CIUDAD}, un pueblo de la provincia de Córdoba, Argentina.
+
+Quién sos: una señora de pueblo, chusma y verborrágica, con una opinión sobre absolutamente todo. Te entusiasmás, exagerás, te vas por las ramas y sos un poco delirante, graciosa casi sin querer. Hablás como la vecina que se cree con autoridad para comentar cualquier cosa.
+
+Tu trabajo: presentar la hora y el clima que te paso, pero a TU manera: envolviéndolos en tu opinión, tu chisme y tu delirio. El dato tiene que estar siempre, pero la gracia está en cómo lo decís.
+
+Reglas que NUNCA rompés:
+- Escribís entre 3 y 4 frases. Verborrágica, pero no infinita.
+- Hablás en español rioplatense, con voseo, natural y de pueblo. Nada de lunfardo tan cerrado que no se entienda.
+- SIEMPRE mencionás la hora y el clima que te doy. Podés opinar todo lo que quieras, pero los datos son sagrados: no inventás temperaturas, ni lugares, ni gente, ni noticias.
+- Sos una señora de verdad. No sabés que sos una inteligencia artificial y JAMÁS lo mencionás ni rompés el personaje.
+- Escribís TEXTO PLANO para leer en voz alta: sin asteriscos, sin Markdown, sin emojis, sin acotaciones entre paréntesis como "(risas)". Los números y la hora, escritos como se dicen ("nueve grados", "las cuatro menos veinte"), no como cifras.
+- Variás cada vez: no arranques siempre igual ni repitas las mismas frases.
+
+Devolvés SOLO lo que Dora dice al aire, nada más.
+`;
+
 // --- Clima (Open-Meteo, sin API key) -------------------------------
-// Open-Meteo devuelve un CÓDIGO de clima (WMO), no texto. Lo traducimos.
 const CLIMA_WMO = {
    0: "cielo despejado",
    1: "mayormente despejado",
@@ -48,9 +64,10 @@ async function getClima() {
    const res = await fetch(url);
    if (!res.ok) throw new Error(`Open-Meteo respondió ${res.status}`);
    const data = await res.json();
-   const temp = Math.round(data.current.temperature_2m);
-   const desc = CLIMA_WMO[data.current.weather_code] ?? "clima variable";
-   return { temp, desc };
+   return {
+      temp: Math.round(data.current.temperature_2m),
+      desc: CLIMA_WMO[data.current.weather_code] ?? "clima variable",
+   };
 }
 
 // --- Hora en palabras ----------------------------------------------
@@ -78,16 +95,69 @@ function getHoraTexto() {
    return `${base} de la ${franja}`;
 }
 
-// --- Texto de la locución (plantilla; después la escribe el LLM) ----
+// --- Guion (Gemini escribe como Dora) ------------------------------
+async function getGuion(hora, clima) {
+   const KEY = process.env.GEMINI_API_KEY;
+   if (!KEY) throw new Error("Falta GEMINI_API_KEY (¿creaste el .env?)");
+
+   const datos = [
+      `- Hora: ${hora}`,
+      clima
+         ? `- Temperatura: ${clima.temp} grados`
+         : "- Temperatura: (no disponible)",
+      clima ? `- Clima: ${clima.desc}` : "- Clima: (no disponible)",
+   ].join("\n");
+
+   const userMsg = `Datos de este momento en ${CIUDAD}:\n${datos}\n\nEscribí lo que diría Dora al aire ahora mismo.`;
+
+   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+   const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": KEY },
+      body: JSON.stringify({
+         systemInstruction: { parts: [{ text: DORA_PROMPT }] },
+         contents: [{ role: "user", parts: [{ text: userMsg }] }],
+         generationConfig: {
+            temperature: 1.2,
+            maxOutputTokens: 300,
+            thinkingConfig: { thinkingBudget: 0 },
+         },
+      }),
+   });
+   if (!res.ok)
+      throw new Error(`Gemini respondió ${res.status}: ${await res.text()}`);
+
+   const data = await res.json();
+   const raw = (data.candidates?.[0]?.content?.parts ?? [])
+      .map((p) => p.text)
+      .filter(Boolean)
+      .join(" ");
+   // Red de seguridad: sacar cualquier símbolo de Markdown que se cuele
+   const limpio = raw
+      .replace(/[*_#\`]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+   if (!limpio) throw new Error("Gemini devolvió vacío");
+   return limpio;
+}
+
+// --- Arma el texto: Gemini, con fallback a plantilla ---------------
 async function armarTexto() {
-   const horaTexto = getHoraTexto();
+   const hora = getHoraTexto();
+   let clima = null;
    try {
-      const { temp, desc } = await getClima();
-      return `${horaTexto}. En ${CIUDAD}, ${temp} grados y ${desc}. Volvemos con más música.`;
+      clima = await getClima();
    } catch (e) {
-      // Si el clima falla, no dejamos a la radio muda: hablamos solo de la hora.
       console.warn("Clima no disponible:", e.message);
-      return `${horaTexto}. Volvemos con más música.`;
+   }
+
+   try {
+      return await getGuion(hora, clima);
+   } catch (e) {
+      // Si Gemini falla, la radio no queda muda: plantilla simple.
+      console.warn("Gemini no disponible, uso plantilla:", e.message);
+      const climaTxt = clima ? `, ${clima.temp} grados y ${clima.desc}` : "";
+      return `${hora}${climaTxt}. Volvemos con más música.`;
    }
 }
 
@@ -114,7 +184,7 @@ async function generarVoz(texto) {
 // --- Orquestación --------------------------------------------------
 async function main() {
    const texto = await armarTexto();
-   console.log("Locución:", texto);
+   console.log("Dora dice:", texto);
    const bytes = await generarVoz(texto);
    console.log(`OK: ${bytes} bytes -> output/locucion_test.mp3`);
 }

@@ -1,7 +1,7 @@
 # Audio: no se versiona (pesado + licencias variadas)
 music/
 output/
-
+.env
 # macOS
 .DS_Store
 README.md
