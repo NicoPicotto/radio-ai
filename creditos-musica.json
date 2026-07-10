@@ -1,0 +1,695 @@
+{
+  "2084": {
+    "archivo": "2084_Yeah_Yeah_Yeah_Yeah.mp3",
+    "titulo": "Yeah, Yeah, Yeah, Yeah",
+    "artista": "Manuzik",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/2084"
+  },
+  "2169": {
+    "archivo": "2169_The_new_day.mp3",
+    "titulo": "The new day",
+    "artista": "Greg Baumont",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/",
+    "url": "https://www.jamendo.com/track/2169"
+  },
+  "3273": {
+    "archivo": "3273_JazzProg.mp3",
+    "titulo": "JazzProg",
+    "artista": "Manuzik",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/3273"
+  },
+  "6182": {
+    "archivo": "6182_She_Told_me.mp3",
+    "titulo": "She Told me",
+    "artista": "Antarhes",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/6182"
+  },
+  "7042": {
+    "archivo": "7042_Sieste_ocho.mp3",
+    "titulo": "Sieste ocho",
+    "artista": "Suerte",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+    "url": "https://www.jamendo.com/track/7042"
+  },
+  "8559": {
+    "archivo": "8559_Silk_Road.mp3",
+    "titulo": "Silk Road",
+    "artista": "Manu Cornet",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/8559"
+  },
+  "8565": {
+    "archivo": "8565_Uonin_s_Piece.mp3",
+    "titulo": "Uonin's Piece",
+    "artista": "Manu Cornet",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/8565"
+  },
+  "12303": {
+    "archivo": "12303_Tribute_to_the_kings.mp3",
+    "titulo": "Tribute to the kings",
+    "artista": "Trafic de Blues",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/12303"
+  },
+  "14015": {
+    "archivo": "14015_Life_is_good.mp3",
+    "titulo": "Life is good",
+    "artista": "Galdson",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+    "url": "https://www.jamendo.com/track/14015"
+  },
+  "15655": {
+    "archivo": "15655_Invisible_Walls.mp3",
+    "titulo": "Invisible Walls",
+    "artista": "Revolution Void",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/15655"
+  },
+  "15656": {
+    "archivo": "15656_Factum_par_Fictio.mp3",
+    "titulo": "Factum par Fictio",
+    "artista": "Revolution Void",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/15656"
+  },
+  "15658": {
+    "archivo": "15658_Effects_of_Elevation.mp3",
+    "titulo": "Effects of Elevation",
+    "artista": "Revolution Void",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/15658"
+  },
+  "15660": {
+    "archivo": "15660_Double_the_Daily_Dose.mp3",
+    "titulo": "Double the Daily Dose",
+    "artista": "Revolution Void",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/15660"
+  },
+  "20763": {
+    "archivo": "20763_AS_THE_SUN_RISES.mp3",
+    "titulo": "AS THE SUN RISES",
+    "artista": "conFusion",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.0/fr/",
+    "url": "https://www.jamendo.com/track/20763"
+  },
+  "25706": {
+    "archivo": "25706_When_Waves_Trying_to_Catch_a_Marvel.mp3",
+    "titulo": "When Waves Trying to Catch a Marvel",
+    "artista": "Antony Raijekov",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/25706"
+  },
+  "25707": {
+    "archivo": "25707_Be_Brave_feat_Norine_Braun.mp3",
+    "titulo": "Be Brave (feat. Norine Braun)",
+    "artista": "Antony Raijekov",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/25707"
+  },
+  "29872": {
+    "archivo": "29872_While_We_Walk_2004.mp3",
+    "titulo": "While We Walk (2004)",
+    "artista": "Antony Raijekov",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/29872"
+  },
+  "34575": {
+    "archivo": "34575_Onda_su_Ombra.mp3",
+    "titulo": "Onda su Ombra",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/2.5/it/",
+    "url": "https://www.jamendo.com/track/34575"
+  },
+  "34576": {
+    "archivo": "34576_Salsa_di_Soy.mp3",
+    "titulo": "Salsa di Soy",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/2.5/it/",
+    "url": "https://www.jamendo.com/track/34576"
+  },
+  "35574": {
+    "archivo": "35574_Heavy_Hopes.mp3",
+    "titulo": "Heavy Hopes",
+    "artista": "The Ease Down",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "url": "https://www.jamendo.com/track/35574"
+  },
+  "48721": {
+    "archivo": "48721_5_mai_17h.mp3",
+    "titulo": "5 mai à 17h",
+    "artista": "Tom La Meche",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/48721"
+  },
+  "73210": {
+    "archivo": "73210_SaReGaMa_Oh_No_Babe_2007.mp3",
+    "titulo": "SaReGaMa - Oh No, Babe (2007)",
+    "artista": "SaReGaMa",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/73210"
+  },
+  "114765": {
+    "archivo": "114765_01_Opposites.mp3",
+    "titulo": "01 - Opposites",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/114765"
+  },
+  "114772": {
+    "archivo": "114772_02_Urban_Slanging.mp3",
+    "titulo": "02 - Urban Slanging",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/114772"
+  },
+  "114773": {
+    "archivo": "114773_03_Silent.mp3",
+    "titulo": "03 - Silent",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/114773"
+  },
+  "114780": {
+    "archivo": "114780_04_Through_The_Night.mp3",
+    "titulo": "04 - Through The Night",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/114780"
+  },
+  "114781": {
+    "archivo": "114781_05_Blue_Night_Dance.mp3",
+    "titulo": "05 - Blue Night Dance",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/114781"
+  },
+  "114794": {
+    "archivo": "114794_06_What_s_Up.mp3",
+    "titulo": "06 - What's Up",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/114794"
+  },
+  "121074": {
+    "archivo": "121074_Between_Light_and_Shadow_feat_Moving_Sand.mp3",
+    "titulo": "Between Light and Shadow (feat. Moving Sand)",
+    "artista": "Triplexity",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/121074"
+  },
+  "121083": {
+    "archivo": "121083_Coal_Train.mp3",
+    "titulo": "Coal Train",
+    "artista": "Triplexity",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/121083"
+  },
+  "121123": {
+    "archivo": "121123_Lucky_Number_Seven.mp3",
+    "titulo": "Lucky Number Seven",
+    "artista": "Triplexity",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/121123"
+  },
+  "159010": {
+    "archivo": "159010_Dewey_Square.mp3",
+    "titulo": "Dewey Square",
+    "artista": "Hugo 'Droopy' Contini",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/159010"
+  },
+  "159012": {
+    "archivo": "159012_Sandu.mp3",
+    "titulo": "Sandu",
+    "artista": "Hugo 'Droopy' Contini",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/159012"
+  },
+  "159014": {
+    "archivo": "159014_Captain_Hugo.mp3",
+    "titulo": "Captain Hugo",
+    "artista": "Hugo 'Droopy' Contini",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/159014"
+  },
+  "161537": {
+    "archivo": "161537_Atlanta.mp3",
+    "titulo": "Atlanta",
+    "artista": "Reno Project",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/161537"
+  },
+  "161538": {
+    "archivo": "161538_Constellation.mp3",
+    "titulo": "Constellation",
+    "artista": "Reno Project",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/161538"
+  },
+  "161539": {
+    "archivo": "161539_Down.mp3",
+    "titulo": "Down",
+    "artista": "Reno Project",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/161539"
+  },
+  "161544": {
+    "archivo": "161544_System.mp3",
+    "titulo": "System",
+    "artista": "Reno Project",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/161544"
+  },
+  "161545": {
+    "archivo": "161545_The_Field.mp3",
+    "titulo": "The Field",
+    "artista": "Reno Project",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/161545"
+  },
+  "161546": {
+    "archivo": "161546_Urban.mp3",
+    "titulo": "Urban",
+    "artista": "Reno Project",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/161546"
+  },
+  "170946": {
+    "archivo": "170946_01_Manila.mp3",
+    "titulo": "01-Manila",
+    "artista": "Luc Bartoli",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/170946"
+  },
+  "189568": {
+    "archivo": "189568_Triplexity_Invited_with_Jennifer_Greer.mp3",
+    "titulo": "Triplexity - Invited (with Jennifer Greer)",
+    "artista": "Triplexity",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/189568"
+  },
+  "189585": {
+    "archivo": "189585_Triplexity_Lise_with_LucB.mp3",
+    "titulo": "Triplexity - Lise (with LucB)",
+    "artista": "Triplexity",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/189585"
+  },
+  "205093": {
+    "archivo": "205093_sunshine_cafe.mp3",
+    "titulo": "sunshine cafe",
+    "artista": "Tymono",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/205093"
+  },
+  "261271": {
+    "archivo": "261271_Misbehaved.mp3",
+    "titulo": "Misbehaved",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/261271"
+  },
+  "266919": {
+    "archivo": "266919_Slow_Groovin.mp3",
+    "titulo": "Slow Groovin",
+    "artista": "Raphael Pistachio",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/266919"
+  },
+  "267796": {
+    "archivo": "267796_Stay_Tuned.mp3",
+    "titulo": "Stay Tuned",
+    "artista": "SONIC MYSTERY",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/267796"
+  },
+  "308468": {
+    "archivo": "308468_Looking_for_the_line.mp3",
+    "titulo": "Looking for the line",
+    "artista": "Special Quartet",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/308468"
+  },
+  "324617": {
+    "archivo": "324617_Don_t_say_I_didn_t_warn_you.mp3",
+    "titulo": "Don't say I didn't warn you",
+    "artista": "Régis V. Gronoff",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/324617"
+  },
+  "355479": {
+    "archivo": "355479_Hand_In_Space.mp3",
+    "titulo": "Hand In Space",
+    "artista": "Quantum Jazz",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/355479"
+  },
+  "355486": {
+    "archivo": "355486_Casa_Noir.mp3",
+    "titulo": "Casa Noir",
+    "artista": "Quantum Jazz",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/355486"
+  },
+  "370256": {
+    "archivo": "370256_Moonlit_Clouds.mp3",
+    "titulo": "Moonlit Clouds",
+    "artista": "Régis V. Gronoff",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/370256"
+  },
+  "395291": {
+    "archivo": "395291_Looking_for_a_way_out.mp3",
+    "titulo": "Looking for a way out",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/395291"
+  },
+  "395292": {
+    "archivo": "395292_Pablito_s_Way.mp3",
+    "titulo": "Pablito's Way",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/395292"
+  },
+  "395293": {
+    "archivo": "395293_Second.mp3",
+    "titulo": "Second",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/395293"
+  },
+  "399202": {
+    "archivo": "399202_Sentimental.mp3",
+    "titulo": "Sentimental",
+    "artista": "Matti Paalanen",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/399202"
+  },
+  "425154": {
+    "archivo": "425154_Jungle_Bungle.mp3",
+    "titulo": "Jungle Bungle",
+    "artista": "Jazz Oil",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/425154"
+  },
+  "435883": {
+    "archivo": "435883_I_dont_need_you.mp3",
+    "titulo": "I dont need you",
+    "artista": "14ice_music",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/435883"
+  },
+  "457082": {
+    "archivo": "457082_Upside_Down.mp3",
+    "titulo": "Upside Down",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/457082"
+  },
+  "457118": {
+    "archivo": "457118_Move_On.mp3",
+    "titulo": "Move On",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/457118"
+  },
+  "457119": {
+    "archivo": "457119_Miss_she_Spends.mp3",
+    "titulo": "Miss she Spends",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/457119"
+  },
+  "457120": {
+    "archivo": "457120_Sofa.mp3",
+    "titulo": "Sofa",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/457120"
+  },
+  "457127": {
+    "archivo": "457127_Call_me_Dazie_Mae.mp3",
+    "titulo": "Call me Dazie Mae",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/457127"
+  },
+  "472887": {
+    "archivo": "472887_Lully_Lullay_unreal_dm_feat_CiggiBurns.mp3",
+    "titulo": "Lully Lullay (unreal_dm feat. CiggiBurns)",
+    "artista": "Snowflake & ccMixter",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/472887"
+  },
+  "472893": {
+    "archivo": "472893_Winter_Sunlight_airtone_feat_Leza2unes.mp3",
+    "titulo": "Winter Sunlight (airtone feat. Leza2unes)",
+    "artista": "Snowflake & ccMixter",
+    "licencia": "http://creativecommons.org/licenses/by/3.0/",
+    "url": "https://www.jamendo.com/track/472893"
+  },
+  "744927": {
+    "archivo": "744927_At_the_Begining_of_Love.mp3",
+    "titulo": "At the Begining of Love",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/744927"
+  },
+  "768436": {
+    "archivo": "768436_Flight_To_Geneva.mp3",
+    "titulo": "Flight To Geneva",
+    "artista": "Anitek",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/768436"
+  },
+  "878021": {
+    "archivo": "878021_Reine_d_Afrique_Dubbi_d_amore.mp3",
+    "titulo": "Reine d'Afrique (Dubbi d'amore)",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/878021"
+  },
+  "878028": {
+    "archivo": "878028_Uncle_Dave.mp3",
+    "titulo": "Uncle Dave",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/878028"
+  },
+  "947852": {
+    "archivo": "947852_Evidence_Song.mp3",
+    "titulo": "Evidence Song",
+    "artista": "The Good Lawdz",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/947852"
+  },
+  "947857": {
+    "archivo": "947857_A_Lil_Sumhin_Sumhin.mp3",
+    "titulo": "A Lil Sumhin' Sumhin'",
+    "artista": "The Good Lawdz",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/947857"
+  },
+  "962055": {
+    "archivo": "962055_Je_l_aime.mp3",
+    "titulo": "Je l'aime",
+    "artista": "Law'",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/962055"
+  },
+  "962063": {
+    "archivo": "962063_Une_tincelle.mp3",
+    "titulo": "Une étincelle",
+    "artista": "Law'",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/962063"
+  },
+  "964535": {
+    "archivo": "964535_Les_files_d_attente.mp3",
+    "titulo": "Les files d'attente",
+    "artista": "Law'",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/964535"
+  },
+  "964538": {
+    "archivo": "964538_Talons_aiguilles.mp3",
+    "titulo": "Talons aiguilles",
+    "artista": "Law'",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/964538"
+  },
+  "1048629": {
+    "archivo": "1048629_sweet_tania.mp3",
+    "titulo": "sweet tania",
+    "artista": "Arnaud Martin Jazabana",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1048629"
+  },
+  "1078326": {
+    "archivo": "1078326_Lazy_Duck.mp3",
+    "titulo": "Lazy Duck",
+    "artista": "Martin Eigenmann",
+    "licencia": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "url": "https://www.jamendo.com/track/1078326"
+  },
+  "1110279": {
+    "archivo": "1110279_C_est_La_Vie.mp3",
+    "titulo": "C'est La Vie",
+    "artista": "NaTtA",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/1110279"
+  },
+  "1113648": {
+    "archivo": "1113648_Job_Done.mp3",
+    "titulo": "Job Done",
+    "artista": "SONIC MYSTERY",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1113648"
+  },
+  "1119677": {
+    "archivo": "1119677_Heart_and_Soul.mp3",
+    "titulo": "Heart and Soul",
+    "artista": "Robert Avellanet",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/1119677"
+  },
+  "1119687": {
+    "archivo": "1119687_I_Was_Born_For_You.mp3",
+    "titulo": "I Was Born For You",
+    "artista": "Robert Avellanet",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/1119687"
+  },
+  "1131486": {
+    "archivo": "1131486_Open_The_Source.mp3",
+    "titulo": "Open The Source",
+    "artista": "Paolo Pavan",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/1131486"
+  },
+  "1165403": {
+    "archivo": "1165403_Let_The_Sunshine_In.mp3",
+    "titulo": "Let The Sunshine In",
+    "artista": "The Mind Orchestra",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1165403"
+  },
+  "1171560": {
+    "archivo": "1171560_About_Me.mp3",
+    "titulo": "About Me",
+    "artista": "Angus &amp; Friends",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1171560"
+  },
+  "1207044": {
+    "archivo": "1207044_Le_Coeur_en_Vadrouille.mp3",
+    "titulo": "Le Coeur en Vadrouille",
+    "artista": "CaLey n' DaNis",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1207044"
+  },
+  "1247308": {
+    "archivo": "1247308_To_Be_a_Master_P.mp3",
+    "titulo": "To Be a Master P.",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247308"
+  },
+  "1247309": {
+    "archivo": "1247309_Barbagil.mp3",
+    "titulo": "Barbagil",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247309"
+  },
+  "1247352": {
+    "archivo": "1247352_Talk_Samba_Parliamo_un_p.mp3",
+    "titulo": "Talk Samba (Parliamo un pò)",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247352"
+  },
+  "1247371": {
+    "archivo": "1247371_After_All.mp3",
+    "titulo": "After All",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247371"
+  },
+  "1247372": {
+    "archivo": "1247372_Balzi_Mossi_Mozambiguo.mp3",
+    "titulo": "Balzi Mossi (Mozambiguo)",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247372"
+  },
+  "1247374": {
+    "archivo": "1247374_C_est_pareil.mp3",
+    "titulo": "C est pareil",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247374"
+  },
+  "1247375": {
+    "archivo": "1247375_Boom_Boom_Baby.mp3",
+    "titulo": "Boom Boom Baby",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc/3.0/",
+    "url": "https://www.jamendo.com/track/1247375"
+  },
+  "1405057": {
+    "archivo": "1405057_Cure_For_The_Fuss.mp3",
+    "titulo": "Cure For The Fuss",
+    "artista": "astat",
+    "licencia": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "url": "https://www.jamendo.com/track/1405057"
+  },
+  "1408401": {
+    "archivo": "1408401_Lullaby_For_Phil.mp3",
+    "titulo": "Lullaby For Phil",
+    "artista": "Alexey Baranov",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1408401"
+  },
+  "1428062": {
+    "archivo": "1428062_Chiudi_gli_Occhi.mp3",
+    "titulo": "Chiudi gli Occhi",
+    "artista": "Boom Boom Beckett",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1428062"
+  },
+  "1431337": {
+    "archivo": "1431337_Dreams_About_You.mp3",
+    "titulo": "Dreams About You",
+    "artista": "Volodymyr Gavrylyuk",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1431337"
+  },
+  "1518105": {
+    "archivo": "1518105_When_Paris_is_Singing.mp3",
+    "titulo": "When Paris is Singing",
+    "artista": "Dazie Mae",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1518105"
+  },
+  "1826189": {
+    "archivo": "1826189_Not_the_One_to_Say_I_Told_You_So_24_bit_Master.mp3",
+    "titulo": "Not the One to Say (I Told You So) (24-bit Master)",
+    "artista": "Cole Powell",
+    "licencia": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "url": "https://www.jamendo.com/track/1826189"
+  },
+  "1860165": {
+    "archivo": "1860165_Athens.mp3",
+    "titulo": "Athens",
+    "artista": "Pierce Murphy",
+    "licencia": "http://creativecommons.org/licenses/by/3.0/",
+    "url": "https://www.jamendo.com/track/1860165"
+  }
+}

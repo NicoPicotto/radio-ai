@@ -22,7 +22,7 @@ speech = request.dynamic.list(pedir_locucion)
 speech = amplify(4.0, speech)
 
 # Una canción, una locución, una canción...
-radio = rotate(weights=[1, 1], [music, speech])
+radio = rotate(weights=[3, 1], [music, speech])
 
 # Transición a medida:
 # - entre dos temas de música: crossfade normal.

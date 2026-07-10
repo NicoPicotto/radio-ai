@@ -12,7 +12,7 @@ const OUT_DIR = path.join(__dirname, "..", "output");
 const OUTPUT_PATH = path.join(OUT_DIR, "locucion.wav");
 const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.wav");
 const GEMINI_MODEL = "gemini-2.5-flash";
-const INTERVALO_MS = 3 * 60 * 1000; // regenera cada 3 minutos
+const INTERVALO_MS = 5 * 60 * 1000; // regenera cada 3 minutos
 const NEWS_FEED_URL =
    "https://news.google.com/rss/search?q=Cordoba+Argentina&hl=es-419&gl=AR&ceid=AR:es-419";
 
@@ -23,6 +23,9 @@ const TZ = "America/Argentina/Cordoba";
 
 const VOCES = { DORA: "ef_dora", CACHO: "em_alex" };
 const PAUSA = 0.45; // segundos de silencio entre intervenciones
+
+const CLIMA_CADA_MS = 60 * 60 * 1000; // el clima, a lo sumo una vez por hora
+let ultimoClimaMs = 0; // última vez que se mencionó el clima
 
 // --- Las personalidades (acá se ajustan los personajes) ------------
 const GUION_PROMPT = `
@@ -38,7 +41,7 @@ Reglas que NUNCA rompés:
 - El diálogo tiene entre 4 y 6 intervenciones en total, cortas (una o dos frases cada una). No se eterniza.
 - Cada intervención va en su propia línea, empezando con "DORA:" o "CACHO:". Nada más: sin acotaciones, sin describir tonos, sin paréntesis.
 - Empieza y termina Dora (ella conduce).
-- SIEMPRE se dice la hora y el clima que te paso. Los datos son sagrados: usan SOLO los que figuran en los datos de abajo. No inventan ningún dato extra, ni siquiera para comparar o dar contexto (nada de "el otro día había treinta grados" ni "ayer llovió" si no se los pasé).
+- SIEMPRE se dice la hora. El clima y la noticia se mencionan SOLO si figuran en los datos de abajo; si no están, no se los inventa ni se los nombra. Los datos son sagrados: no inventan ningún dato extra, ni siquiera para comparar o dar contexto.
 - No escriben risas ni interjecciones sueltas para leer ("ja", "je", "jaja"): un TTS las lee literales y suena mal. La gracia va en lo que dicen, no en risas escritas.
 - La hora se dice aproximada ("cerca de las cuatro", "las tres y media pasadas"), nunca exacta al minuto.
 - No todos los chistes de Cacho tienen que ser puns perfectos: alcanza con la energía de chiste malo. Si no sale uno bueno, mejor una ocurrencia boba que un pun forzado.
@@ -201,21 +204,25 @@ function parseDialogo(texto) {
 // --- Junta datos y arma la lista de turnos (con fallback) ----------
 async function armarDialogo() {
    const hora = getHoraTexto();
+
+   // Clima: a lo sumo una vez por hora, si no lo repiten demasiado.
    let clima = null;
-   try {
-      clima = await getClima();
-   } catch (e) {
-      console.warn("  Clima no disponible:", e.message);
+   if (Date.now() - ultimoClimaMs >= CLIMA_CADA_MS) {
+      try {
+         clima = await getClima();
+         ultimoClimaMs = Date.now();
+      } catch (e) {
+         console.warn("  Clima no disponible:", e.message);
+      }
    }
 
+   // Noticia: casi siempre que hablan, si hay alguna disponible.
    let noticia = null;
-   if (Math.random() < 0.5) {
-      try {
-         const titulares = await getNoticias();
-         noticia = titulares[Math.floor(Math.random() * titulares.length)];
-      } catch (e) {
-         console.warn("  Noticias no disponibles:", e.message);
-      }
+   try {
+      const titulares = await getNoticias();
+      noticia = titulares[Math.floor(Math.random() * titulares.length)];
+   } catch (e) {
+      console.warn("  Noticias no disponibles:", e.message);
    }
 
    try {
@@ -224,7 +231,6 @@ async function armarDialogo() {
       if (turnos.length === 0) throw new Error("No se pudo parsear el diálogo");
       return turnos;
    } catch (e) {
-      // Si algo falla, cae a una sola línea de Dora: la radio no queda muda.
       console.warn("  Gemini falló, uso plantilla (solo Dora):", e.message);
       const climaTxt = clima ? `, ${clima.temp} grados y ${clima.desc}` : "";
       return [
