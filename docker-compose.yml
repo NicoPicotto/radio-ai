@@ -51,3 +51,21 @@ services:
          - GEMINI_API_KEY=${GEMINI_API_KEY}
       volumes:
          - ./output:/app/output
+
+   caddy:
+      image: caddy:2
+      container_name: radio-caddy
+      restart: unless-stopped
+      depends_on:
+         - icecast
+      ports:
+         - "80:80"
+         - "443:443"
+      volumes:
+         - ./Caddyfile:/etc/caddy/Caddyfile:ro
+         - caddy_data:/data
+         - caddy_config:/config
+
+volumes:
+   caddy_data:
+   caddy_config:

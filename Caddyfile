@@ -1,0 +1,3 @@
+radio.nicopicotto.dev {
+    reverse_proxy icecast:8000
+}
