@@ -11,8 +11,8 @@ const KOKORO_URL = "http://kokoro:8880/v1/audio/speech";
 const OUT_DIR = path.join(__dirname, "..", "output");
 const OUTPUT_PATH = path.join(OUT_DIR, "locucion.wav");
 const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.wav");
-const GEMINI_MODEL = "gemini-2.5-flash";
-const INTERVALO_MS = 5 * 60 * 1000; // regenera cada 3 minutos
+const GEMINI_MODEL = "gemini-2.5-flash-lite";
+const INTERVALO_MS = 10 * 60 * 1000; // cada 10 minutos, alineado a cada 3 temas
 const NEWS_FEED_URL =
    "https://news.google.com/rss/search?q=Cordoba+Argentina&hl=es-419&gl=AR&ceid=AR:es-419";
 
