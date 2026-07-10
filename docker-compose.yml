@@ -40,7 +40,9 @@ services:
          - "8880:8880"
 
    generator:
-      build: .
+      build:
+         context: .
+         dockerfile: generator/Dockerfile
       container_name: radio-generator
       restart: unless-stopped
       depends_on:
