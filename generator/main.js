@@ -1,7 +1,7 @@
 // generator/main.js
-// Corre en loop: cada pocos minutos, Dora escribe una locución nueva
-// (hora + clima reales) y Kokoro la convierte en voz. Liquidsoap la
-// levanta sola. La personalidad vive en DORA_PROMPT.
+// Corre en loop: Gemini escribe un diálogo entre Dora y Cacho (matrimonio),
+// Kokoro pone cada voz, y se pegan en un solo WAV. Liquidsoap lo levanta solo.
+// Las personalidades viven en GUION_PROMPT.
 
 const { writeFile, rename } = require("node:fs/promises");
 const path = require("node:path");
@@ -9,8 +9,8 @@ const path = require("node:path");
 // --- Configuración -------------------------------------------------
 const KOKORO_URL = "http://localhost:8880/v1/audio/speech";
 const OUT_DIR = path.join(__dirname, "..", "output");
-const OUTPUT_PATH = path.join(OUT_DIR, "locucion.mp3");
-const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.mp3");
+const OUTPUT_PATH = path.join(OUT_DIR, "locucion.wav");
+const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.wav");
 const GEMINI_MODEL = "gemini-2.5-flash";
 const INTERVALO_MS = 3 * 60 * 1000; // regenera cada 3 minutos
 const NEWS_FEED_URL =
@@ -21,26 +21,34 @@ const LAT = -32.7558;
 const LON = -63.7822;
 const TZ = "America/Argentina/Cordoba";
 
-// --- La personalidad de Dora (acá se ajusta el personaje) ----------
-const DORA_PROMPT = `
-Sos Dora, la locutora de una pequeña radio de ${CIUDAD}, un pueblo de la provincia de Córdoba, Argentina.
+const VOCES = { DORA: "ef_dora", CACHO: "em_alex" };
+const PAUSA = 0.45; // segundos de silencio entre intervenciones
 
-Quién sos: una señora de pueblo, chusma y verborrágica, con una opinión sobre absolutamente todo. Te entusiasmás, exagerás, te vas por las ramas y sos un poco delirante, graciosa casi sin querer. Hablás como la vecina que se cree con autoridad para comentar cualquier cosa.
+// --- Las personalidades (acá se ajustan los personajes) ------------
+const GUION_PROMPT = `
+Escribís el guion de una pequeña radio de ${CIUDAD}, un pueblo de la provincia de Córdoba, Argentina, conducida por un matrimonio: Dora y Cacho.
 
-Tu trabajo: presentar la hora y el clima que te paso, pero a TU manera: envolviéndolos en tu opinión, tu chisme y tu delirio. El dato tiene que estar siempre, pero la gracia está en cómo lo decís.
+DORA: una señora de pueblo, chusma y verborrágica, con una opinión sobre absolutamente todo. Se entusiasma, exagera, se va por las ramas, es un poco delirante y graciosa casi sin querer. Es la que lleva la conducción.
+
+CACHO: el marido de Dora. Tan chusma como ella: se enganchan y exageran juntos, se dan manija. Pero tiene un sello propio: cada tanto suelta un chiste malísimo, de esos de tío (juegos de palabras bobos, ocurrencias que le causan mucha gracia a él). Dora los sufre ("ay, este hombre"), pone los ojos en blanco, pero lo quiere y termina riéndose igual.
+
+Escribís un diálogo cortito entre los dos, presentando la hora y el clima (y a veces una noticia) a su manera: chusmeando, opinando, y con alguna ocurrencia de Cacho.
 
 Reglas que NUNCA rompés:
-- Escribís entre 3 y 4 frases. Verborrágica, pero no infinita.
-- Hablás en español rioplatense, con voseo, natural y de pueblo. Nada de lunfardo tan cerrado que no se entienda.
-- SIEMPRE mencionás la hora y el clima que te doy. Podés opinar todo lo que quieras, pero los datos son sagrados: no inventás temperaturas, ni lugares, ni gente, ni noticias.
-- La hora que te paso puede tener unos minutos de atraso para cuando salga al aire, así que decila SIEMPRE aproximada ("cerca de las cuatro", "las tres y media pasadas"), nunca exacta al minuto.
-- Sos una señora de verdad. No sabés que sos una inteligencia artificial y JAMÁS lo mencionás ni rompés el personaje.
-- Escribís TEXTO PLANO para leer en voz alta: sin asteriscos, sin Markdown, sin emojis, sin acotaciones entre paréntesis. Los números escritos como se dicen ("nueve grados"), no como cifras.
-- Variás cada vez: no arranques siempre igual ni repitas las mismas frases.
-- A veces te paso un titular de noticia real para comentar. Cuando lo tengas, opinás sobre ese titular con tu estilo (te indignás, chusmeás, te sorprendés), pero SIEMPRE ateniéndote a lo que dice: no agregás datos ni detalles que no estén en el titular. Cuando no te paso noticia, hablás solo de la hora y el clima.
-- Si el titular es sobre una tragedia, un accidente o algo doloroso, NO hacés chistes ni lo trivializás: lo comentás con respeto y sensibilidad, aunque sigas siendo vos.
+- El diálogo tiene entre 4 y 6 intervenciones en total, cortas (una o dos frases cada una). No se eterniza.
+- Cada intervención va en su propia línea, empezando con "DORA:" o "CACHO:". Nada más: sin acotaciones, sin describir tonos, sin paréntesis.
+- Empieza y termina Dora (ella conduce).
+- SIEMPRE se dice la hora y el clima que te paso. Los datos son sagrados: usan SOLO los que figuran en los datos de abajo. No inventan ningún dato extra, ni siquiera para comparar o dar contexto (nada de "el otro día había treinta grados" ni "ayer llovió" si no se los pasé).
+- No escriben risas ni interjecciones sueltas para leer ("ja", "je", "jaja"): un TTS las lee literales y suena mal. La gracia va en lo que dicen, no en risas escritas.
+- La hora se dice aproximada ("cerca de las cuatro", "las tres y media pasadas"), nunca exacta al minuto.
+- No todos los chistes de Cacho tienen que ser puns perfectos: alcanza con la energía de chiste malo. Si no sale uno bueno, mejor una ocurrencia boba que un pun forzado.
+- Hablan en español rioplatense, con voseo, natural y de pueblo.
+- Son dos personas de verdad. No saben que son inteligencias artificiales y JAMÁS lo mencionan.
+- TEXTO PLANO: sin asteriscos, sin Markdown, sin emojis; los números escritos como se dicen ("nueve grados"), no en cifra.
+- Si la noticia es sobre una tragedia o algo doloroso, no hacen chistes ni la trivializan: la comentan con respeto, aunque sigan siendo ellos.
+- Varían cada vez: no arrancan siempre igual.
 
-Devolvés SOLO lo que Dora dice al aire, nada más.
+Devolvés SOLO el diálogo con las etiquetas DORA: y CACHO:, nada más.
 `;
 
 // --- Clima (Open-Meteo, sin API key) -------------------------------
@@ -104,7 +112,38 @@ function getHoraTexto() {
    return `${base} de la ${franja}`;
 }
 
-// --- Guion (Gemini escribe como Dora) ------------------------------
+// --- Noticias (RSS Google News Córdoba, sin key) -------------------
+function decodeEntities(s) {
+   return s
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+}
+
+async function getNoticias() {
+   const res = await fetch(NEWS_FEED_URL);
+   if (!res.ok) throw new Error(`RSS respondió ${res.status}`);
+   const xml = await res.text();
+   const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
+   const titulares = items
+      .slice(0, 6)
+      .map((it) => {
+         const m = it.match(/<title>([\s\S]*?)<\/title>/);
+         let t = m ? m[1] : "";
+         t = t.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, "");
+         t = decodeEntities(t)
+            .replace(/\s+-\s+[^-]+$/, "")
+            .trim();
+         return t;
+      })
+      .filter(Boolean);
+   if (titulares.length === 0) throw new Error("Sin titulares en el feed");
+   return titulares;
+}
+
+// --- Guion en diálogo (Gemini) -------------------------------------
 async function getGuion(hora, clima, noticia) {
    const KEY = process.env.GEMINI_API_KEY;
    if (!KEY) throw new Error("Falta GEMINI_API_KEY (¿creaste el .env?)");
@@ -118,18 +157,18 @@ async function getGuion(hora, clima, noticia) {
    ];
    if (noticia) datos.push(`- Titular de noticia para comentar: "${noticia}"`);
 
-   const userMsg = `Datos de este momento en ${CIUDAD}:\n${datos.join("\n")}\n\nEscribí lo que diría Dora al aire ahora mismo.`;
+   const userMsg = `Datos de este momento en ${CIUDAD}:\n${datos.join("\n")}\n\nEscribí el diálogo de Dora y Cacho para este momento.`;
 
    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
    const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": KEY },
       body: JSON.stringify({
-         systemInstruction: { parts: [{ text: DORA_PROMPT }] },
+         systemInstruction: { parts: [{ text: GUION_PROMPT }] },
          contents: [{ role: "user", parts: [{ text: userMsg }] }],
          generationConfig: {
             temperature: 1.2,
-            maxOutputTokens: 300,
+            maxOutputTokens: 500,
             thinkingConfig: { thinkingBudget: 0 },
          },
       }),
@@ -138,20 +177,29 @@ async function getGuion(hora, clima, noticia) {
       throw new Error(`Gemini respondió ${res.status}: ${await res.text()}`);
 
    const data = await res.json();
-   const raw = (data.candidates?.[0]?.content?.parts ?? [])
+   const texto = (data.candidates?.[0]?.content?.parts ?? [])
       .map((p) => p.text)
       .filter(Boolean)
-      .join(" ");
-   const limpio = raw
-      .replace(/[*_#\`]/g, "")
-      .replace(/\s+/g, " ")
+      .join("")
       .trim();
-   if (!limpio) throw new Error("Gemini devolvió vacío");
-   return limpio;
+   if (!texto) throw new Error("Gemini devolvió vacío");
+   return texto;
 }
 
-// --- Arma el texto: Gemini, con fallback a plantilla ---------------
-async function armarTexto() {
+// Convierte el diálogo etiquetado en una lista de { voice, text }.
+function parseDialogo(texto) {
+   const turnos = [];
+   for (const linea of texto.split("\n")) {
+      const m = linea.match(/^\s*(DORA|CACHO)\s*:\s*(.+)$/i);
+      if (!m) continue;
+      const dicho = m[2].replace(/[*_#\`]/g, "").trim();
+      if (dicho) turnos.push({ voice: VOCES[m[1].toUpperCase()], text: dicho });
+   }
+   return turnos;
+}
+
+// --- Junta datos y arma la lista de turnos (con fallback) ----------
+async function armarDialogo() {
    const hora = getHoraTexto();
    let clima = null;
    try {
@@ -160,7 +208,6 @@ async function armarTexto() {
       console.warn("  Clima no disponible:", e.message);
    }
 
-   // La mitad de las veces Dora comenta una noticia; la otra mitad, solo hora y clima.
    let noticia = null;
    if (Math.random() < 0.5) {
       try {
@@ -172,91 +219,138 @@ async function armarTexto() {
    }
 
    try {
-      return await getGuion(hora, clima, noticia);
+      const texto = await getGuion(hora, clima, noticia);
+      const turnos = parseDialogo(texto);
+      if (turnos.length === 0) throw new Error("No se pudo parsear el diálogo");
+      return turnos;
    } catch (e) {
-      console.warn("  Gemini no disponible, uso plantilla:", e.message);
+      // Si algo falla, cae a una sola línea de Dora: la radio no queda muda.
+      console.warn("  Gemini falló, uso plantilla (solo Dora):", e.message);
       const climaTxt = clima ? `, ${clima.temp} grados y ${clima.desc}` : "";
-      return `${hora}${climaTxt}. Volvemos con más música.`;
+      return [
+         {
+            voice: "ef_dora",
+            text: `${hora}${climaTxt}. Volvemos con más música.`,
+         },
+      ];
    }
 }
 
-// --- Voz (Kokoro), con escritura atómica ---------------------------
-async function generarVoz(texto) {
+// --- WAV: parseo, silencio y armado (Node puro, sin librerías) -----
+function parseWav(buf) {
+   let offset = 12; // salto "RIFF" + size + "WAVE"
+   let fmt = null,
+      pcm = null;
+   while (offset + 8 <= buf.length) {
+      const id = buf.toString("ascii", offset, offset + 4);
+      const size = buf.readUInt32LE(offset + 4);
+      const start = offset + 8;
+      if (id === "fmt ") {
+         fmt = {
+            channels: buf.readUInt16LE(start + 2),
+            sampleRate: buf.readUInt32LE(start + 4),
+            bitsPerSample: buf.readUInt16LE(start + 14),
+         };
+      } else if (id === "data") {
+         pcm = buf.subarray(start, start + size);
+      }
+      offset = start + size + (size % 2); // padding a byte par
+   }
+   if (!fmt || !pcm) throw new Error("WAV inesperado de Kokoro");
+   return { ...fmt, pcm };
+}
+
+function silencio(segundos, fmt) {
+   const muestras = Math.round(segundos * fmt.sampleRate);
+   return Buffer.alloc(muestras * fmt.channels * (fmt.bitsPerSample / 8));
+}
+
+function buildWav(fmt, pcm) {
+   const { channels, sampleRate, bitsPerSample } = fmt;
+   const blockAlign = channels * (bitsPerSample / 8);
+   const byteRate = sampleRate * blockAlign;
+   const h = Buffer.alloc(44);
+   h.write("RIFF", 0, "ascii");
+   h.writeUInt32LE(36 + pcm.length, 4);
+   h.write("WAVE", 8, "ascii");
+   h.write("fmt ", 12, "ascii");
+   h.writeUInt32LE(16, 16);
+   h.writeUInt16LE(1, 20); // PCM
+   h.writeUInt16LE(channels, 22);
+   h.writeUInt32LE(sampleRate, 24);
+   h.writeUInt32LE(byteRate, 28);
+   h.writeUInt16LE(blockAlign, 32);
+   h.writeUInt16LE(bitsPerSample, 34);
+   h.write("data", 36, "ascii");
+   h.writeUInt32LE(pcm.length, 40);
+   return Buffer.concat([h, pcm]);
+}
+
+// --- Sintetiza una línea con Kokoro (formato WAV) ------------------
+async function sintetizarLinea(texto, voice) {
    const res = await fetch(KOKORO_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
          model: "kokoro",
          input: texto,
-         voice: "ef_dora",
-         response_format: "mp3",
+         voice,
+         response_format: "wav",
          speed: 1.0,
       }),
    });
-   if (!res.ok)
-      throw new Error(`Kokoro respondió ${res.status}: ${await res.text()}`);
-   const audio = Buffer.from(await res.arrayBuffer());
-   // Escribimos a un temporal y renombramos: así Liquidsoap nunca
-   // lee un archivo a medio escribir (el rename es atómico).
-   await writeFile(TMP_PATH, audio);
+   if (!res.ok) throw new Error(`Kokoro (${voice}) respondió ${res.status}`);
+   return parseWav(Buffer.from(await res.arrayBuffer()));
+}
+
+// --- Sintetiza todo el diálogo y pega los clips en un WAV ----------
+async function generarVozDialogo(turnos) {
+   const wavs = [];
+   for (const t of turnos) {
+      wavs.push(await sintetizarLinea(t.text, t.voice));
+   }
+   const fmt = {
+      channels: wavs[0].channels,
+      sampleRate: wavs[0].sampleRate,
+      bitsPerSample: wavs[0].bitsPerSample,
+   };
+   const partes = [silencio(0.15, fmt)]; // pequeño respiro inicial
+   wavs.forEach((w, i) => {
+      if (i > 0) partes.push(silencio(PAUSA, fmt));
+      partes.push(w.pcm);
+   });
+   partes.push(silencio(0.3, fmt)); // respiro final
+
+   const wavFinal = buildWav(fmt, Buffer.concat(partes));
+   await writeFile(TMP_PATH, wavFinal);
    await rename(TMP_PATH, OUTPUT_PATH);
-   return audio.length;
+   return wavFinal.length;
 }
 
 // --- Una vuelta completa -------------------------------------------
 async function generarUna() {
-   const texto = await armarTexto();
-   console.log(new Date().toLocaleTimeString("es-AR"), "Dora dice:", texto);
-   const bytes = await generarVoz(texto);
-   console.log(`  OK: ${bytes} bytes -> output/locucion.mp3`);
+   const turnos = await armarDialogo();
+   console.log(new Date().toLocaleTimeString("es-AR"), "Guion:");
+   for (const t of turnos) {
+      console.log(`  ${t.voice === "ef_dora" ? "DORA " : "CACHO"}: ${t.text}`);
+   }
+   const bytes = await generarVozDialogo(turnos);
+   console.log(`  OK: ${bytes} bytes -> output/locucion.wav`);
 }
 
-// --- Loop infinito: regenera cada INTERVALO_MS ---------------------
+// --- Loop infinito -------------------------------------------------
 async function main() {
    console.log(
-      `Generador de Dora en marcha. Regenera cada ${INTERVALO_MS / 60000} min.`,
+      `Generador Dora + Cacho en marcha. Regenera cada ${INTERVALO_MS / 60000} min.`,
    );
    while (true) {
       try {
          await generarUna();
       } catch (e) {
-         // Una falla no mata el loop: queda la locución anterior sonando.
          console.error("  Falló esta vuelta (sigo igual):", e.message);
       }
       await new Promise((r) => setTimeout(r, INTERVALO_MS));
    }
-}
-
-// Decodifica las entidades HTML más comunes de los titulares.
-function decodeEntities(s) {
-   return s
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
-}
-
-// Trae unos titulares del feed RSS. Sin librerías: extrae los <title> a mano.
-async function getNoticias() {
-   const res = await fetch(NEWS_FEED_URL);
-   if (!res.ok) throw new Error(`RSS respondió ${res.status}`);
-   const xml = await res.text();
-   const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
-   const titulares = items
-      .slice(0, 6)
-      .map((it) => {
-         const m = it.match(/<title>([\s\S]*?)<\/title>/);
-         let t = m ? m[1] : "";
-         t = t.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, ""); // por si viene en CDATA
-         t = decodeEntities(t)
-            .replace(/\s+-\s+[^-]+$/, "")
-            .trim(); // saco el " - Fuente" del final
-         return t;
-      })
-      .filter(Boolean);
-   if (titulares.length === 0) throw new Error("Sin titulares en el feed");
-   return titulares;
 }
 
 main();

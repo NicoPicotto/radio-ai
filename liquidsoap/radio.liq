@@ -16,7 +16,7 @@ music = playlist(
 # La locución se levanta dinámicamente: cada vez re-lee el archivo
 # actual, así toma la última que generó el script, sin reiniciar.
 def pedir_locucion() =
-  [request.create('annotate:type="voz":/output/locucion.mp3')]
+  [request.create('annotate:type="voz":/output/locucion.wav')]
 end
 speech = request.dynamic.list(pedir_locucion)
 speech = amplify(4.0, speech)
