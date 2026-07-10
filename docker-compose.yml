@@ -38,3 +38,14 @@ services:
       restart: unless-stopped
       ports:
          - "8880:8880"
+
+   generator:
+      build: .
+      container_name: radio-generator
+      restart: unless-stopped
+      depends_on:
+         - kokoro
+      environment:
+         - GEMINI_API_KEY=${GEMINI_API_KEY}
+      volumes:
+         - ./output:/app/output

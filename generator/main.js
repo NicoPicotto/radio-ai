@@ -7,7 +7,7 @@ const { writeFile, rename } = require("node:fs/promises");
 const path = require("node:path");
 
 // --- Configuración -------------------------------------------------
-const KOKORO_URL = "http://localhost:8880/v1/audio/speech";
+const KOKORO_URL = "http://kokoro:8880/v1/audio/speech";
 const OUT_DIR = path.join(__dirname, "..", "output");
 const OUTPUT_PATH = path.join(OUT_DIR, "locucion.wav");
 const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.wav");
