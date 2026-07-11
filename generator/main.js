@@ -11,7 +11,7 @@ const KOKORO_URL = "http://kokoro:8880/v1/audio/speech";
 const OUT_DIR = path.join(__dirname, "..", "output");
 const OUTPUT_PATH = path.join(OUT_DIR, "locucion.wav");
 const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.wav");
-const GEMINI_MODEL = "gemini-2.5-flash-lite";
+const GEMINI_MODEL = "gemini-3.1-flash-lite";
 const INTERVALO_MS = 10 * 60 * 1000; // cada 10 minutos, alineado a cada 3 temas
 const NEWS_FEED_URL =
    "https://news.google.com/rss/search?q=Cordoba+Argentina&hl=es-419&gl=AR&ceid=AR:es-419";
@@ -172,7 +172,7 @@ async function getGuion(hora, clima, noticia) {
          generationConfig: {
             temperature: 1.2,
             maxOutputTokens: 500,
-            thinkingConfig: { thinkingBudget: 0 },
+            thinkingConfig: { thinkingLevel: "low" },
          },
       }),
    });
