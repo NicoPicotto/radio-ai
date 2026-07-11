@@ -10,7 +10,7 @@ const { writeFile, readFile, mkdir, access } = require("node:fs/promises");
 const path = require("node:path");
 
 // --- Configuración (ajustá a gusto) --------------------------------
-const CANTIDAD = 100; // cuántos temas bajar
+const CANTIDAD = 300; // cuántos temas bajar
 const TAGS = "jazz"; // género: "rock", "jazz", "electronic", "folk", "cumbia"...
 const ORDER = "popularity_total"; // populares primero
 const MUSIC_DIR = path.join(__dirname, "..", "music");

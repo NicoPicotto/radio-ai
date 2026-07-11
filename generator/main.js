@@ -43,7 +43,7 @@ Reglas que NUNCA rompés:
 - Empieza y termina Dora (ella conduce).
 - SIEMPRE se dice la hora. El clima y la noticia se mencionan SOLO si figuran en los datos de abajo; si no están, no se los inventa ni se los nombra. Los datos son sagrados: no inventan ningún dato extra, ni siquiera para comparar o dar contexto.
 - No escriben risas ni interjecciones sueltas para leer ("ja", "je", "jaja"): un TTS las lee literales y suena mal. La gracia va en lo que dicen, no en risas escritas.
-- La hora se dice aproximada ("cerca de las cuatro", "las tres y media pasadas"), nunca exacta al minuto.
+- La hora ya te la paso aproximada (por ejemplo "pasadas las tres" o "cerca de las cuatro"). Decila así, natural, y NUNCA inventes ni agregues un minuto exacto.
 - No todos los chistes de Cacho tienen que ser puns perfectos: alcanza con la energía de chiste malo. Si no sale uno bueno, mejor una ocurrencia boba que un pun forzado.
 - Hablan en español rioplatense, con voseo, natural y de pueblo.
 - Son dos personas de verdad. No saben que son inteligencias artificiales y JAMÁS lo mencionan.
@@ -91,6 +91,7 @@ async function getClima() {
 }
 
 // --- Hora en palabras ----------------------------------------------
+// --- Hora en palabras, SIEMPRE aproximada --------------------------
 function getHoraTexto() {
    const partes = new Intl.DateTimeFormat("es-AR", {
       timeZone: TZ,
@@ -101,18 +102,29 @@ function getHoraTexto() {
    const hora = Number(partes.find((p) => p.type === "hour").value);
    const min = Number(partes.find((p) => p.type === "minute").value);
 
+   // Nunca decimos el minuto exacto: antes de la media, "pasadas las H";
+   // de la media en adelante, "cerca de las H+1".
+   const pasada = min < 30;
+   const ref = pasada ? hora : (hora + 1) % 24;
+
    let franja;
-   if (hora < 6) franja = "madrugada";
-   else if (hora < 12) franja = "mañana";
-   else if (hora < 20) franja = "tarde";
+   if (ref < 6) franja = "madrugada";
+   else if (ref < 12) franja = "mañana";
+   else if (ref < 20) franja = "tarde";
    else franja = "noche";
 
-   let h12 = hora % 12;
+   let h12 = ref % 12;
    if (h12 === 0) h12 = 12;
 
-   let base = h12 === 1 ? "Es la una" : `Son las ${h12}`;
-   if (min > 0) base += ` y ${min}`;
-   return `${base} de la ${franja}`;
+   const esUna = h12 === 1;
+   const reloj = esUna ? "la una" : `las ${h12}`;
+   const frase = pasada
+      ? esUna
+         ? "pasada la una"
+         : `pasadas ${reloj}`
+      : `cerca de ${reloj}`;
+
+   return `${frase} de la ${franja}`;
 }
 
 // --- Noticias (RSS Google News Córdoba, sin key) -------------------
