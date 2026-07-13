@@ -13,8 +13,14 @@ const OUTPUT_PATH = path.join(OUT_DIR, "locucion.wav");
 const TMP_PATH = path.join(OUT_DIR, ".locucion.tmp.wav");
 const GEMINI_MODEL = "gemini-3.1-flash-lite";
 const INTERVALO_MS = 10 * 60 * 1000; // cada 10 minutos, alineado a cada 3 temas
-const NEWS_FEED_URL =
-   "https://news.google.com/rss/search?q=Cordoba+Argentina&hl=es-419&gl=AR&ceid=AR:es-419";
+
+const NEWS_LOCAL = "Cordoba Argentina when:1d";
+const NEWS_NACIONAL = "Argentina when:1d";
+const PROB_NACIONAL = 0.25; // ~1 de cada 4 veces, noticia nacional
+
+// Memoria de titulares ya dichos, para no repetir
+const usadosRecientes = [];
+const MAX_MEMORIA = 8;
 
 const CIUDAD = "General Deheza";
 const LAT = -32.7558;
@@ -79,6 +85,11 @@ const CLIMA_WMO = {
    99: "tormenta con granizo",
 };
 
+function feedURL(query) {
+   const q = encodeURIComponent(query); // encodea bien el "when:1d" (el ":" incluido)
+   return `https://news.google.com/rss/search?q=${q}&hl=es-419&gl=AR&ceid=AR:es-419`;
+}
+
 async function getClima() {
    const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&timezone=auto`;
    const res = await fetch(url);
@@ -137,25 +148,40 @@ function decodeEntities(s) {
       .replace(/&#39;/g, "'");
 }
 
-async function getNoticias() {
-   const res = await fetch(NEWS_FEED_URL);
+async function getNoticias(query) {
+   const res = await fetch(feedURL(query));
    if (!res.ok) throw new Error(`RSS respondió ${res.status}`);
    const xml = await res.text();
    const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
-   const titulares = items
-      .slice(0, 6)
+
+   const noticias = items
       .map((it) => {
-         const m = it.match(/<title>([\s\S]*?)<\/title>/);
-         let t = m ? m[1] : "";
+         const mt = it.match(/<title>([\s\S]*?)<\/title>/);
+         let t = mt ? mt[1] : "";
          t = t.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, "");
          t = decodeEntities(t)
             .replace(/\s+-\s+[^-]+$/, "")
             .trim();
-         return t;
+
+         const md = it.match(/<pubDate>([\s\S]*?)<\/pubDate>/);
+         const fecha = md ? Date.parse(md[1]) : 0; // RFC 822, Date.parse lo banca
+
+         return { titulo: t, fecha };
       })
-      .filter(Boolean);
-   if (titulares.length === 0) throw new Error("Sin titulares en el feed");
-   return titulares;
+      .filter((n) => n.titulo)
+      .sort((a, b) => b.fecha - a.fecha); // más nuevas primero
+
+   if (noticias.length === 0) throw new Error("Sin titulares en el feed");
+   return noticias.slice(0, 8).map((n) => n.titulo); // los 8 más frescos
+}
+
+function elegirNoticia(titulares) {
+   const frescos = titulares.filter((t) => !usadosRecientes.includes(t));
+   const pool = frescos.length ? frescos : titulares; // si ya los usé todos, reseteo
+   const elegida = pool[Math.floor(Math.random() * pool.length)];
+   usadosRecientes.push(elegida);
+   if (usadosRecientes.length > MAX_MEMORIA) usadosRecientes.shift();
+   return elegida;
 }
 
 // --- Guion en diálogo (Gemini) -------------------------------------
@@ -231,8 +257,11 @@ async function armarDialogo() {
    // Noticia: casi siempre que hablan, si hay alguna disponible.
    let noticia = null;
    try {
-      const titulares = await getNoticias();
-      noticia = titulares[Math.floor(Math.random() * titulares.length)];
+      const nacional = Math.random() < PROB_NACIONAL;
+      const titulares = await getNoticias(
+         nacional ? NEWS_NACIONAL : NEWS_LOCAL,
+      );
+      noticia = elegirNoticia(titulares);
    } catch (e) {
       console.warn("  Noticias no disponibles:", e.message);
    }
